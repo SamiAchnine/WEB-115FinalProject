@@ -1,19 +1,26 @@
 class Game {
-    constructor(gameID) {
+    constructor(gameID, songs) {
         this.gameID = gameID;
-        this.songs = [];
+        this.songs = songs;
     }
-    addSong(self) {
-        
+    addSong(song) {
+        this.songs.push(song);
+    }
+    delSong(song) {
+        for (let i = 0; i < this.songs.length; i++) {
+            if (i == song) {
+                this.songs.splice(i, 1)
+            }
+        }
     }
 }
 
-class Song extends Game {
+class Song {
     constructor(albumCover, link, title, game, songLengthSecs) {
         this.albumCover = "./covers/" + game.gameID + albumCover;
         this.link = "./songs/" + game.gameID + link;
         this.title = title;
-        this.game = super(game, []);
+        this.game = game;
         this.songLengthSecs = songLengthSecs;
 
     }
@@ -33,12 +40,16 @@ class Playlist {
         this.albumCover = "./covers/" + listID + albumCover;
         this.title = title;
         this.listID = listID;
-        this.songs = this.getSongsFromGameId();
+        this.songs = this.addSongsFromGameId();
     }
-    getSongsFromGameId(song) {
-        let gameID = song.gameID;
-        // for every song with that gameID, add it to the playlist
-        // ...but when are they declared?
+    addSongsFromGameId(song) {
+        let game = song.game;
+        let songsList = [];
+        for (let i = 0; i < game.songs; i++) {
+            songsList.push(game.songs[i]);
+        }
+        return songsList;
+        
     }
     shuffle() {
         // ADD CODE FOR SHUFFLING ALL SONGS WITHIN this.songs
@@ -57,3 +68,8 @@ class UserPlaylist extends Playlist {
         super.shuffle();
     }
 }
+
+// dummy, so far
+// will probably have to learn how to work with multiple js files in order to not bloat the crap out of the code base
+let SonicFrontiers = new Game("sf", [sf1]);
+let sf1 = new Song("none", "Cyberspace1-1", "Cyberspace 1-1: Database", SonicFrontiers, "127");
