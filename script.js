@@ -1,3 +1,9 @@
+// - DOM ELEMENTS -
+const musicPlayer = document.getElementById("musicPlayer");
+const trackList = document.getElementById("tracklist");
+
+
+
 class Game {
     constructor(gameID, songs) {
         this.gameID = gameID;
@@ -68,8 +74,3 @@ class UserPlaylist extends Playlist {
         super.shuffle();
     }
 }
-
-// dummy, so far
-// will probably have to learn how to work with multiple js files in order to not bloat the crap out of the code base
-let SonicFrontiers = new Game("sf", [sf1]);
-let sf1 = new Song("none", "Cyberspace1-1", "Cyberspace 1-1: Database", SonicFrontiers, "127");

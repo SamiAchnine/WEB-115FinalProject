@@ -1,0 +1,123 @@
+div {
+    display: block;
+}
+
+li {
+    display: list-item;
+}
+
+
+.musicPlayer {
+    display: flex;
+    flex-direction: row;
+    gap: 100px;
+    justify-content: center;
+    align-items: flex-start;
+}
+
+.tracklist {
+    width: 500px;
+    max-height: 450px;
+    overflow-y: auto;
+    background-color: darkslategray;
+    padding: 15px;
+    border-radius: 15px;
+    height: auto;
+    margin: 0 auto;
+    align-items: center;
+    color: white;
+}
+
+.listCategory {
+    margin: 0 0 10px 0;
+}
+
+.openListButton {
+    width: 100%;
+    text-align: left;
+    background: #333;
+    color: white;
+    border: none;
+    padding: 8px 10px;
+    cursor: pointer;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    font-size: 15px;
+    height: 40px;
+}
+
+.listTracks {
+    list-style: none;
+    margin: 0 auto;
+    flex-direction: column;
+    align-items: center;
+    max-height: 0;
+    overflow: hidden;
+    padding-top: 0;
+    padding-bottom: 0;
+}
+
+.listTracksOpen {
+    max-height: 2000px;
+}
+
+.track {
+    position: relative;
+    padding: 10px 28px 5px 8px;
+    cursor: pointer;
+    border-radius: 6px;
+    text-align: left;
+    word-wrap: break-word;
+    margin-top: 5px;
+    transition: background 0.2s;
+}
+
+.track:hover {
+    background-color: darkgreen;
+}
+
+.audioPlayerControls {
+    display: flex;
+    flex-direction: column; 
+    align-items: center;
+    width: 100%;
+}
+
+.controlsButtons {
+    display: flex;
+    gap: 10px;
+    flex-direction: row;
+    margin-bottom: 8px;
+}
+
+.metadataDiv {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    width: 100%;
+    min-width: 0;
+    margin: 0;
+}
+
+#player {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    width: 50%;
+    background-color: darkslateblue;
+    padding: 40px;
+    border-radius: 15px;
+    height: auto;
+}
+
+#albumCoverDiv {
+    width: 275px;
+    height: 275px;
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
