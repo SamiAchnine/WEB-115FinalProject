@@ -47,7 +47,7 @@ class Song {
     }
 }
 
-let sf1 = new Song("Default", "Chaos Island (6th Mvt.).mp3", "Chaos Island (6th Mvt.)", sf, 277);
+let sf1 = new Song("Default", "Chaos Island (6th Mvt.).mp3", "Chaos Island (6th Mvt.)", sf, 290);
 sf.addSong(sf1);
 
 class Playlist {
