@@ -5,40 +5,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Sami's Music Player</title>
     <link rel="stylesheet" href="./style.css">
-    <script src="./script.js" defer></script>
+    
 </head>
 <body>
     <h1>Sami's Music Player</h1>
 
     <section class="musicPlayer" id="musicPlayer">
         <div class="tracklist" id="tracklist">
-            <div class="listCategory">
-                Generated at runtime
-                <button class="openListButton" id="listIdOpenButton">Playlist.title</button>
-                    Button also generated at run time for each playlist, button opens the playlist
-                <ul class="listTracks" id="Playlist.title"> 
-                    <li class="track"> 
-                        Song.title
+            <div class="listCategory" id="dummyListCategory">
+                <button class="openListButton" id="dummyOpenButton">Dummy Button</button>
+                <ul class="listTracks" id="dummyListTracks"> 
+                    <li class="dummyTrack"> 
+                        Dummy track
                     </li>
-                    Create as many song < li >s as needed with a for loop
                 </ul>
-
-                </div>
             </div>
+        </div>
         </div>
         <div id="player">
             <div id="albumCoverDiv">
                 <img id="albumCover" src="./covers/sfDefault.jpeg" width="275px" height="275px">
             </div>
             <div id="metadataDiv">
-                <div id="title">
-                    glorpnorp
-                </div>
-                <div id="gameName">
-                    sonic fronteirns
-                </div>
+                <p id="title">
+                    No song selected
+                </p>
+                <p id="gameName">
+                    Sonic Frontiers
+                </p>
                 <div id="audioPlayer">
-                    <audio></audio>
                     <div class="audioPlayerControls">
                         <div class="controlsButtons">
                             <button id="play">Play</button>
@@ -57,4 +52,5 @@
         </div>
     </section>
 </body>
+<script src="./script.js" defer></script>
 </html>
