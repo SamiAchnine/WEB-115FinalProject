@@ -5,13 +5,13 @@ const musicPlayer = document.getElementById("musicPlayer");
 const trackList = document.getElementById("tracklist");
 const dummyOpenButton = document.getElementById("listIdOpenButton");
 
-let currentSong;
 
 
 class Game {
-    constructor(gameID, songs) {
+    constructor(gameID, songs, gameTitle) {
         this.gameID = gameID;
         this.songs = songs;
+        this.gameTitle = gameTitle
     }
     addSong(song) {
         this.songs.push(song);
@@ -25,22 +25,22 @@ class Game {
     }
 }
 
-let sf = new Game("sf", []);
+let sf = new Game("sf", [], "Sonic Frontiers");
 
 class Song {
     constructor(albumCover, link, title, game, songLengthSecs) {
-        this.albumCover = "./covers/" + game.gameID + albumCover;
+        this.albumCover = "./covers/" + game.gameID + albumCover + ".jpeg";
         this.link = "./songs/" + game.gameID + "/" + link;
         this.title = title;
         this.game = game;
         this.songLengthSecs = songLengthSecs;
-
+        this._audio = new Audio(this.link);
     }
     play() {
-        // ADD CODE FOR PLAYING SONG
+        this._audio.play();
     }
     pause() {
-        // ADD CODE FOR PAUSING SONG
+        this._audio.pause();
     }
     stop() {
         // ADD CODE FOR PAUSING -> SETTING SONG TO NULL OR BLANK OR DEFAULT OR WHATEVER
@@ -57,8 +57,6 @@ class Playlist {
         this.songs = game.songs;
     }
     addSongsFromGameId(game) {
-
-
         // DOMfoolery pt0: cleaning out the dummy data
         const dummyListCategory = document.getElementById("dummyListCategory");
         dummyListCategory.remove();
@@ -92,11 +90,8 @@ class Playlist {
             track.id = game.gameID + i;
             // DOMfoolery pt3.5: adding the event listener to each song to switch out the metadata (will call separate function)
             track.addEventListener("click", () => {
-
-                // TODO: call the song's play() function, and change metadata
-                // dummy just so i can feel good about myself
-                let song = new Audio(game.songs[i].link);
-                song.play();
+                let currentSong = game.songs[i];
+                changeMetadata(currentSong);
             });
 
             DOM_listTracks.appendChild(track);
@@ -120,9 +115,34 @@ class Playlist {
        listCategory.appendChild(DOM_listTracks);
         
     }
-    shuffle() {
-        // ADD CODE FOR SHUFFLING ALL SONGS WITHIN this.songs
-    }
+}
+
+function changeMetadata(currentSong) {
+    // step 1: changing the song title and game title
+    let metadataContainer = document.getElementById("player").lastElementChild;
+    metadataContainer.firstElementChild.textContent = currentSong.title; // <p id="title"> </p>
+    metadataContainer.children[1].textContent = currentSong.game.gameTitle; // <p id="gameName"> </p>
+
+    // step 2: changing the album cover
+    metadataContainer.parentElement.firstElementChild.firstElementChild.src = currentSong.albumCover;
+
+    // step 3: adding all the event listeners
+    let playButton = document.getElementById("play");
+    playButton.addEventListener("click", () => {
+        currentSong.play();
+    });
+    let pauseButton = document.getElementById("pause");
+    pauseButton.addEventListener("click", () => {
+        currentSong.pause();
+    });
+       // stop button kinda has no reason to exist but its kinda neat i'll let it live -S
+    let stopButton = document.getElementById("stop");
+    stopButton.addEventListener("click", () => {
+        currentSong.pause();
+        metadataContainer.parentElement.firstElementChild.firstElementChild.src = "./covers/noSong.png";
+        metadataContainer.firstElementChild.textContent = "No song playing";
+        metadataContainer.children[1].textContent = "No game selected";
+    })
 }
 
 let sonicFrontiersPlaylist = new Playlist("Sonic Frontiers", "sf", sf);

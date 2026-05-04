@@ -6,6 +6,9 @@ li {
     display: list-item;
 }
 
+h1 {
+    color: white;
+}
 
 .musicPlayer {
     display: flex;
@@ -59,6 +62,8 @@ li {
 
 .listTracksOpen {
     max-height: 2000px;
+    list-style: none;
+    font-family: Arial, Helvetica, sans-serif;
 }
 
 .track {
@@ -124,3 +129,6 @@ li {
     align-items: center;
 }
 
+body {
+    background-color: black;
+}
