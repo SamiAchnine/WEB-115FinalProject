@@ -5,6 +5,7 @@
 const musicPlayer = document.getElementById("musicPlayer");
 const trackList = document.getElementById("tracklist");
 const dummyOpenButton = document.getElementById("listIdOpenButton");
+const theActualMusicPlayingElement = document.getElementById("theActualMusicPlayingElement");
 
 class Game {
     constructor(gameID, songs, gameTitle) {
@@ -32,16 +33,21 @@ class Song {
         this.title = title;
         this.game = game;
         this.songLengthSecs = songLengthSecs;
-        this._audio = new Audio(this.link);
     }
     play() {
-        this._audio.play();
+        let songSource = document.createElement("source");
+        songSource.src = this.link;
+        songSource.type="audio/mpeg";
+        theActualMusicPlayingElement.appendChild(songSource);
+        theActualMusicPlayingElement.play();
     }
     pause() {
-        this._audio.pause();
+        theActualMusicPlayingElement.pause();
     }
-    stop() {
-        // ADD CODE FOR PAUSING -> SETTING SONG TO NULL OR BLANK OR DEFAULT OR WHATEVER
+    stop () {
+        theActualMusicPlayingElement.pause();
+        theActualMusicPlayingElement.innerHTML = "";
+        theActualMusicPlayingElement.currentTime = 0;
     }
 }
 
@@ -136,7 +142,7 @@ function changeMetadata(currentSong) {
        // stop button kinda has no reason to exist but its kinda neat i'll let it live -S
     let stopButton = document.getElementById("stop");
     stopButton.addEventListener("click", () => {
-        currentSong.pause();
+        currentSong.stop();
         metadataContainer.parentElement.firstElementChild.firstElementChild.src = "./covers/noSong.png";
         metadataContainer.firstElementChild.textContent = "No song selected";
         metadataContainer.children[1].textContent = "No game selected";
