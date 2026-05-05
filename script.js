@@ -6,6 +6,7 @@ const musicPlayer = document.getElementById("musicPlayer");
 const trackList = document.getElementById("tracklist");
 const dummyOpenButton = document.getElementById("listIdOpenButton");
 const theActualMusicPlayingElement = document.getElementById("theActualMusicPlayingElement");
+let currentSong;
 
 class Game {
     constructor(gameID, songs, gameTitle) {
@@ -35,18 +36,22 @@ class Song {
         this.songLengthSecs = songLengthSecs;
     }
     play() {
-        let songSource = document.createElement("source");
-        songSource.src = this.link;
-        songSource.type="audio/mpeg";
-        theActualMusicPlayingElement.appendChild(songSource);
-        theActualMusicPlayingElement.play();
+        changeMetadata();
+        if (theActualMusicPlayingElement == this.link) {
+            theActualMusicPlayingElement.play();
+        }
+        else {
+            theActualMusicPlayingElement.src = this.link;
+            theActualMusicPlayingElement.play();
+        }
+        
     }
     pause() {
         theActualMusicPlayingElement.pause();
     }
     stop () {
         theActualMusicPlayingElement.pause();
-        theActualMusicPlayingElement.innerHTML = "";
+        theActualMusicPlayingElement.src = "";
         theActualMusicPlayingElement.currentTime = 0;
     }
 }
@@ -94,8 +99,8 @@ class Playlist {
             track.id = game.gameID + i;
             // DOMfoolery pt3.5: adding the event listener to each song to switch out the metadata (will call separate function)
             track.addEventListener("click", () => {
-                let currentSong = game.songs[i];
-                changeMetadata(currentSong);
+                currentSong = game.songs[i];
+                changeMetadata();
             });
 
             DOM_listTracks.appendChild(track);
@@ -121,7 +126,7 @@ class Playlist {
     }
 }
 
-function changeMetadata(currentSong) {
+function changeMetadata() {
     // step 1: changing the song title and game title
     let metadataContainer = document.getElementById("player").lastElementChild;
     metadataContainer.firstElementChild.textContent = currentSong.title; // <p id="title"> </p>
@@ -152,8 +157,8 @@ function changeMetadata(currentSong) {
 
 
 class UserPlaylist extends Playlist {
-    constructor(albumCover, title, listID) {
-        super(albumCover, title, listID);
+    constructor(title, listID) {
+        super(title, listID);
         this.songs = [];
     }
     addSong(song) {
@@ -167,15 +172,15 @@ class UserPlaylist extends Playlist {
 
 /* --- I hate to do this again, but... --- */
 /* --- SONGS HELL!!! --- */
-let sf0 = new Song("Default", "A Wonderful World (Celebration Mix).mp3", "A Wonderful World (Celebration Mix)", sf, 140);
+let sf0 = new Song("Yellow", "A Wonderful World (Celebration Mix).mp3", "A Wonderful World (Celebration Mix)", sf, 140);
 sf.addSong(sf0);
 let sf1 = new Song("Default", "A Wonderful World.mp3", "A Wonderful World", sf, 140);
 sf.addSong(sf1);
 let sf2 = new Song("Default", "Achievement (Jingle).mp3", "Achievement (Jingle)", sf, 140);
 sf.addSong(sf2);
-let sf3 = new Song("Default", "Action Chain Challenge.mp3", "Action Chain Challenge", sf, 140);
+let sf3 = new Song("Yellow", "Action Chain Challenge.mp3", "Action Chain Challenge", sf, 140);
 sf.addSong(sf3);
-let sf4 = new Song("Default", "Another Passage (Tails Mvt.).mp3", "Another Passage (Tails Mvt.)", sf, 140);
+let sf4 = new Song("Yellow", "Another Passage (Tails Mvt.).mp3", "Another Passage (Tails Mvt.)", sf, 140);
 sf.addSong(sf4);
 let sf5 = new Song("Default", "Another Tomorrow.mp3", "Another Tomorrow", sf, 140);
 sf.addSong(sf5);
@@ -201,9 +206,9 @@ let sf15 = new Song("Default", "Awakening.mp3", "Awakening", sf, 140);
 sf.addSong(sf15);
 let sf16 = new Song("Default", "Beyond the Past.mp3", "Beyond the Past", sf, 140);
 sf.addSong(sf16);
-let sf17 = new Song("Default", "Blood Flow (Knuckles Mvt.).mp3", "Blood Flow (Knuckles Mvt.)", sf, 140);
+let sf17 = new Song("Yellow", "Blood Flow (Knuckles Mvt.).mp3", "Blood Flow (Knuckles Mvt.)", sf, 140);
 sf.addSong(sf17);
-let sf18 = new Song("Default", "Break Through It All (Instrumental).mp3", "Break Through It All (Instrumental)", sf, 140);
+let sf18 = new Song("Yellow", "Break Through It All (Instrumental).mp3", "Break Through It All (Instrumental)", sf, 140);
 sf.addSong(sf18);
 let sf19 = new Song("Default", "Break Through It All.mp3", "Break Through It All", sf, 140);
 sf.addSong(sf19);
@@ -289,29 +294,29 @@ let sf59 = new Song("Default", "Cyber Space 4-8： No Pain, No Gain.mp3", "Cyber
 sf.addSong(sf59);
 let sf60 = new Song("Default", "Cyber Space 4-9： Signs.mp3", "Cyber Space 4-9： Signs", sf, 140);
 sf.addSong(sf60);
-let sf61 = new Song("Default", "Cyber Space 4-A： Genshi Remix.mp3", "Cyber Space 4-A： Genshi Remix", sf, 140);
+let sf61 = new Song("Yellow", "Cyber Space 4-A： Genshi Remix.mp3", "Cyber Space 4-A： Genshi Remix", sf, 140);
 sf.addSong(sf61);
-let sf62 = new Song("Default", "Cyber Space 4-B： Escape the Loop Remix.mp3", "Cyber Space 4-B： Escape the Loop Remix", sf, 140);
+let sf62 = new Song("Yellow", "Cyber Space 4-B： Escape the Loop Remix.mp3", "Cyber Space 4-B： Escape the Loop Remix", sf, 140);
 sf.addSong(sf62);
-let sf63 = new Song("Default", "Cyber Space 4-C： Arrow of Time Remix.mp3", "Cyber Space 4-C： Arrow of Time Remix", sf, 140);
+let sf63 = new Song("Yellow", "Cyber Space 4-C： Arrow of Time Remix.mp3", "Cyber Space 4-C： Arrow of Time Remix", sf, 140);
 sf.addSong(sf63);
-let sf64 = new Song("Default", "Cyber Space 4-D： Rumble Rave Remix.mp3", "Cyber Space 4-D： Rumble Rave Remix", sf, 140);
+let sf64 = new Song("Yellow", "Cyber Space 4-D： Rumble Rave Remix.mp3", "Cyber Space 4-D： Rumble Rave Remix", sf, 140);
 sf.addSong(sf64);
-let sf65 = new Song("Default", "Cyber Space 4-E： Dropaholic Remix.mp3", "Cyber Space 4-E： Dropaholic Remix", sf, 140);
+let sf65 = new Song("Yellow", "Cyber Space 4-E： Dropaholic Remix.mp3", "Cyber Space 4-E： Dropaholic Remix", sf, 140);
 sf.addSong(sf65);
-let sf66 = new Song("Default", "Cyber Space 4-F： Hype Street Remix.mp3", "Cyber Space 4-F： Hype Street Remix", sf, 140);
+let sf66 = new Song("Yellow", "Cyber Space 4-F： Hype Street Remix.mp3", "Cyber Space 4-F： Hype Street Remix", sf, 140);
 sf.addSong(sf66);
-let sf67 = new Song("Default", "Cyber Space 4-G： Ephemeral Remix.mp3", "Cyber Space 4-G： Ephemeral Remix", sf, 140);
+let sf67 = new Song("Yellow", "Cyber Space 4-G： Ephemeral Remix.mp3", "Cyber Space 4-G： Ephemeral Remix", sf, 140);
 sf.addSong(sf67);
-let sf68 = new Song("Default", "Cyber Space 4-H： Wishes in the Wind Remix.mp3", "Cyber Space 4-H： Wishes in the Wind Remix", sf, 140);
+let sf68 = new Song("Yellow", "Cyber Space 4-H： Wishes in the Wind Remix.mp3", "Cyber Space 4-H： Wishes in the Wind Remix", sf, 140);
 sf.addSong(sf68);
-let sf69 = new Song("Default", "Cyber Space 4-I： Time Flyer Remix.mp3", "Cyber Space 4-I： Time Flyer Remix", sf, 140);
+let sf69 = new Song("Yellow", "Cyber Space 4-I： Time Flyer Remix.mp3", "Cyber Space 4-I： Time Flyer Remix", sf, 140);
 sf.addSong(sf69);
 let sf70 = new Song("Default", "Cyber Space： Result Screen (Complete).mp3", "Cyber Space： Result Screen (Complete)", sf, 140);
 sf.addSong(sf70);
 let sf71 = new Song("Default", "Cyber Space： Result Screen.mp3", "Cyber Space： Result Screen", sf, 140);
 sf.addSong(sf71);
-let sf72 = new Song("Default", "Dear Father (Instrumental).mp3", "Dear Father (Instrumental)", sf, 140);
+let sf72 = new Song("Yellow", "Dear Father (Instrumental).mp3", "Dear Father (Instrumental)", sf, 140);
 sf.addSong(sf72);
 let sf73 = new Song("Default", "Dear Father.mp3", "Dear Father", sf, 140);
 sf.addSong(sf73);
@@ -333,7 +338,7 @@ let sf81 = new Song("Default", "Fallen Ancestrial Star.mp3", "Fallen Ancestrial 
 sf.addSong(sf81);
 let sf82 = new Song("Default", "Final Battle (Absolute).mp3", "Final Battle (Absolute)", sf, 140);
 sf.addSong(sf82);
-let sf83 = new Song("Default", "Find Your Flame (Instrumental).mp3", "Find Your Flame (Instrumental)", sf, 140);
+let sf83 = new Song("Yellow", "Find Your Flame (Instrumental).mp3", "Find Your Flame (Instrumental)", sf, 140);
 sf.addSong(sf83);
 let sf84 = new Song("Default", "Find Your Flame.mp3", "Find Your Flame", sf, 140);
 sf.addSong(sf84);
@@ -355,23 +360,23 @@ let sf92 = new Song("Default", "Guardians： First Encounters.mp3", "Guardians�
 sf.addSong(sf92);
 let sf93 = new Song("Default", "Guardian： ASURA.mp3", "Guardian： ASURA", sf, 140);
 sf.addSong(sf93);
-let sf94 = new Song("Default", "Guardian： CATERPILLAR (Alternate Ver.).mp3", "Guardian： CATERPILLAR (Alternate Ver.)", sf, 140);
+let sf94 = new Song("Yellow", "Guardian： CATERPILLAR (Alternate Ver.).mp3", "Guardian： CATERPILLAR (Alternate Ver.)", sf, 140);
 sf.addSong(sf94);
 let sf95 = new Song("Default", "Guardian： CATERPILLAR.mp3", "Guardian： CATERPILLAR", sf, 140);
 sf.addSong(sf95);
 let sf96 = new Song("Default", "Guardian： FORTRESS.mp3", "Guardian： FORTRESS", sf, 140);
 sf.addSong(sf96);
-let sf97 = new Song("Default", "Guardian： GHOST (Alternate Ver.).mp3", "Guardian： GHOST (Alternate Ver.)", sf, 140);
+let sf97 = new Song("Yellow", "Guardian： GHOST (Alternate Ver.).mp3", "Guardian： GHOST (Alternate Ver.)", sf, 140);
 sf.addSong(sf97);
 let sf98 = new Song("Default", "Guardian： GHOST.mp3", "Guardian： GHOST", sf, 140);
 sf.addSong(sf98);
-let sf99 = new Song("Default", "Guardian： NINJA (Alternate Ver.).mp3", "Guardian： NINJA (Alternate Ver.)", sf, 140);
+let sf99 = new Song("Yellow", "Guardian： NINJA (Alternate Ver.).mp3", "Guardian： NINJA (Alternate Ver.)", sf, 140);
 sf.addSong(sf99);
 let sf100 = new Song("Default", "Guardian： NINJA.mp3", "Guardian： NINJA", sf, 140);
 sf.addSong(sf100);
 let sf101 = new Song("Default", "Guardian： SHARK.mp3", "Guardian： SHARK", sf, 140);
 sf.addSong(sf101);
-let sf102 = new Song("Default", "Guardian： SPIDER (Alternate Ver.).mp3", "Guardian： SPIDER (Alternate Ver.)", sf, 140);
+let sf102 = new Song("Yellow", "Guardian： SPIDER (Alternate Ver.).mp3", "Guardian： SPIDER (Alternate Ver.)", sf, 140);
 sf.addSong(sf102);
 let sf103 = new Song("Default", "Guardian： SPIDER.mp3", "Guardian： SPIDER", sf, 140);
 sf.addSong(sf103);
@@ -381,11 +386,11 @@ let sf105 = new Song("Default", "Guardian： STRIDER.mp3", "Guardian： STRIDER"
 sf.addSong(sf105);
 let sf106 = new Song("Default", "Guardian： SUMO.mp3", "Guardian： SUMO", sf, 140);
 sf.addSong(sf106);
-let sf107 = new Song("Default", "Guardian： TANK (Alternate Ver.).mp3", "Guardian： TANK (Alternate Ver.)", sf, 140);
+let sf107 = new Song("Yellow", "Guardian： TANK (Alternate Ver.).mp3", "Guardian： TANK (Alternate Ver.)", sf, 140);
 sf.addSong(sf107);
 let sf108 = new Song("Default", "Guardian： TANK.mp3", "Guardian： TANK", sf, 140);
 sf.addSong(sf108);
-let sf109 = new Song("Default", "Guardian： TOWER (Alternate Ver.).mp3", "Guardian： TOWER (Alternate Ver.)", sf, 140);
+let sf109 = new Song("Yellow", "Guardian： TOWER (Alternate Ver.).mp3", "Guardian： TOWER (Alternate Ver.)", sf, 140);
 sf.addSong(sf109);
 let sf110 = new Song("Default", "Guardian： TOWER.mp3", "Guardian： TOWER", sf, 140);
 sf.addSong(sf110);
@@ -397,15 +402,15 @@ let sf113 = new Song("Default", "Heart and Soul.mp3", "Heart and Soul", sf, 140)
 sf.addSong(sf113);
 let sf114 = new Song("Default", "Hidden Technology.mp3", "Hidden Technology", sf, 140);
 sf.addSong(sf114);
-let sf115 = new Song("Default", "I'm Here (Instrumental).mp3", "I'm Here (Instrumental)", sf, 140);
+let sf115 = new Song("Yellow", "I'm Here (Instrumental).mp3", "I'm Here (Instrumental)", sf, 140);
 sf.addSong(sf115);
-let sf116 = new Song("Default", "I'm Here (Orchestral Ver.).mp3", "I'm Here (Orchestral Ver.)", sf, 140);
+let sf116 = new Song("Yellow", "I'm Here (Orchestral Ver.).mp3", "I'm Here (Orchestral Ver.)", sf, 140);
 sf.addSong(sf116);
-let sf117 = new Song("Default", "I'm Here (Revisited).mp3", "I'm Here (Revisited)", sf, 140);
+let sf117 = new Song("Yellow", "I'm Here (Revisited).mp3", "I'm Here (Revisited)", sf, 140);
 sf.addSong(sf117);
 let sf118 = new Song("Default", "I'm Here.mp3", "I'm Here", sf, 140);
 sf.addSong(sf118);
-let sf119 = new Song("Default", "I'm With You (Vocal Ver.).mp3", "I'm With You (Vocal Ver.)", sf, 140);
+let sf119 = new Song("Yellow", "I'm With You (Vocal Ver.).mp3", "I'm With You (Vocal Ver.)", sf, 140);
 sf.addSong(sf119);
 let sf120 = new Song("Default", "I'm With You.mp3", "I'm With You", sf, 140);
 sf.addSong(sf120);
@@ -445,9 +450,9 @@ let sf137 = new Song("Default", "Last Ordeal.mp3", "Last Ordeal", sf, 140);
 sf.addSong(sf137);
 let sf138 = new Song("Default", "Lost Friend.mp3", "Lost Friend", sf, 140);
 sf.addSong(sf138);
-let sf139 = new Song("Default", "Master Koco Trial.mp3", "Master Koco Trial", sf, 140);
+let sf139 = new Song("Yellow", "Master Koco Trial.mp3", "Master Koco Trial", sf, 140);
 sf.addSong(sf139);
-let sf140 = new Song("Default", "Maybe If (Amy Mvt.).mp3", "Maybe If (Amy Mvt.)", sf, 140);
+let sf140 = new Song("Yellow", "Maybe If (Amy Mvt.).mp3", "Maybe If (Amy Mvt.)", sf, 140);
 sf.addSong(sf140);
 let sf141 = new Song("Default", "Mystery Girl.mp3", "Mystery Girl", sf, 140);
 sf.addSong(sf141);
@@ -457,11 +462,11 @@ let sf143 = new Song("Default", "No Way Out.mp3", "No Way Out", sf, 140);
 sf.addSong(sf143);
 let sf144 = new Song("Default", "One Last Wish.mp3", "One Last Wish", sf, 140);
 sf.addSong(sf144);
-let sf145 = new Song("Default", "One Way Dream (Instrumental).mp3", "One Way Dream (Instrumental)", sf, 140);
+let sf145 = new Song("Yellow", "One Way Dream (Instrumental).mp3", "One Way Dream (Instrumental)", sf, 140);
 sf.addSong(sf145);
 let sf146 = new Song("Default", "One Way Dream.mp3", "One Way Dream", sf, 140);
 sf.addSong(sf146);
-let sf147 = new Song("Default", "Ouranos Island (Remix).mp3", "Ouranos Island (Remix)", sf, 140);
+let sf147 = new Song("Yellow", "Ouranos Island (Remix).mp3", "Ouranos Island (Remix)", sf, 140);
 sf.addSong(sf147);
 let sf148 = new Song("Default", "Ouranos Island.mp3", "Ouranos Island", sf, 140);
 sf.addSong(sf148);
@@ -485,7 +490,7 @@ let sf157 = new Song("Default", "Rhea Island.mp3", "Rhea Island", sf, 140);
 sf.addSong(sf157);
 let sf158 = new Song("Default", "Sealing.mp3", "Sealing", sf, 140);
 sf.addSong(sf158);
-let sf159 = new Song("Default", "Second Wind (Sonic Mvt.).mp3", "Second Wind (Sonic Mvt.)", sf, 140);
+let sf159 = new Song("Yellow", "Second Wind (Sonic Mvt.).mp3", "Second Wind (Sonic Mvt.)", sf, 140);
 sf.addSong(sf159);
 let sf160 = new Song("Default", "Sonic on the Move.mp3", "Sonic on the Move", sf, 140);
 sf.addSong(sf160);
@@ -531,7 +536,7 @@ let sf180 = new Song("Default", "To The New Frontier.mp3", "To The New Frontier"
 sf.addSong(sf180);
 let sf181 = new Song("Default", "Trapped.mp3", "Trapped", sf, 140);
 sf.addSong(sf181);
-let sf182 = new Song("Default", "Undefeatable (Instrumental).mp3", "Undefeatable (Instrumental)", sf, 140);
+let sf182 = new Song("Yellow", "Undefeatable (Instrumental).mp3", "Undefeatable (Instrumental)", sf, 140);
 sf.addSong(sf182);
 let sf183 = new Song("Default", "Undefeatable.mp3", "Undefeatable", sf, 140);
 sf.addSong(sf183);
