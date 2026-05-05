@@ -6,6 +6,7 @@ const musicPlayer = document.getElementById("musicPlayer");
 const trackList = document.getElementById("tracklist");
 const dummyOpenButton = document.getElementById("listIdOpenButton");
 const theActualMusicPlayingElement = document.getElementById("theActualMusicPlayingElement");
+const addListButton = document.getElementById("addNewPlaylist");
 let currentSong;
 
 class Game {
@@ -37,16 +38,18 @@ class Song {
     }
     play() {
         changeMetadata();
-        if (theActualMusicPlayingElement == this.link) {
+        if (theActualMusicPlayingElement.src.endsWith(this.link)) {
             theActualMusicPlayingElement.play();
         }
         else {
             theActualMusicPlayingElement.src = this.link;
-            theActualMusicPlayingElement.play();
+            theActualMusicPlayingElement.addEventListener("canplay", () => {
+                theActualMusicPlayingElement.play();
+            }, {once: true});   
         }
-        
     }
     pause() {
+        changeMetadata()
         theActualMusicPlayingElement.pause();
     }
     stop () {
@@ -158,16 +161,86 @@ function changeMetadata() {
 
 class UserPlaylist extends Playlist {
     constructor(title, listID) {
-        super(title, listID);
+        super(title, listID, []);
         this.songs = [];
     }
     addSong(song) {
         this.songs.push(song);
-    }
-    shuffle() {
-        super.shuffle();
+
+        // DOMfoolery part 0, clearing dummy data if it exists
+        try {
+            const dummyListCategory = document.getElementById("dummyListCategory");
+            dummyListCategory.remove();
+        }
+        catch (error) {
+            console.log("Dummy data didn't exist")
+        }
+
+        // DOMfoolery pt1: creating the actual list
+        let listCategory = document.createElement("div");
+        listCategory.classList.add("listCategory");
+
+        // DOMfoolery pt2: making the button + event listener to open the list
+        let openListButton = document.createElement("button");
+        openListButton.id = this.listID + "OpenButton";
+        openListButton.classList.add("openListButton");
+        openListButton.textContent = this.title;
+        openListButton.addEventListener("click", () => {
+            if (document.getElementById(this.title).classList.contains("listTracks")) {
+                document.getElementById(this.title).classList.replace("listTracks", "listTracksOpen");
+            }
+            else {
+                document.getElementById(this.title).classList.replace("listTracksOpen", "listTracks");
+            }
+        });
+
+        // DOMfoolery pt3: adding every song from songsList to the track
+        let DOM_listTracks = document.createElement("ul");
+        DOM_listTracks.classList.add("listTracks");
+        DOM_listTracks.id = this.title;
+        for (let i = 0; i < this.songs.length; i++) {
+            let track = document.createElement("li");
+            track.classList.add("track");
+            track.textContent = this.songs[i].title;
+            track.id = this.title + i;
+            // DOMfoolery pt3.5: adding the event listener to each song to switch out the metadata (will call separate function)
+            track.addEventListener("click", () => {
+                currentSong = this.songs[i];
+                changeMetadata();
+            });
+
+            DOM_listTracks.appendChild(track);
+        }
+        
+        //DOMfoolery pt4: adding it all to the DOM (the part where it all goes to shit)
+        /* 
+        <div trackList>
+            <div listCategory>
+                <button> </>
+                <listTracks>
+                    <li track> track 1 </>
+                    <li track> track 2> </>
+                    and so on...
+                </>
+            </>
+        </>
+        */
+       trackList.appendChild(listCategory);
+       listCategory.appendChild(openListButton);
+       listCategory.appendChild(DOM_listTracks);
+        
     }
 }
+
+addListButton.addEventListener("click", () => {
+    let newListName = window.prompt("What is the name of your custom playlist?");
+    // TODO: 
+    // sanitize the newListName, 
+    // add the ability to add songs to the list, 
+    // save the userLists to localStorage
+    let userList = new UserPlaylist(newListName, "userList");
+    userList.addSong(sf12);
+});
 
 
 /* --- I hate to do this again, but... --- */
