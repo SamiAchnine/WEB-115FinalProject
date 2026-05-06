@@ -41,11 +41,12 @@
                             <button class="controlsButton" id="pause">&#9208;</button>
                             <button class="controlsButton" id="stop">&#9632;</button>
                         </div>
-                        
-                        <div>
+                        <div style="display: flex; align-items: center; gap: 1rem;"> 
+                            <!-- div to prevent line breaks-->
                             <label for="volumeSlider">Volume</label>
                             <input type="range" id="volumeSlider" min="0" max="100" value="100">
                         </div>
+                        
                     </div>
                     <audio id="theActualMusicPlayingElement">Your browser is SO ancient that it can't even play audio. Sad.</audio>
                 </div>
