@@ -92,7 +92,7 @@ function changeMetadata() {
     pauseButton.addEventListener("click", () => {
         currentSong.pause();
     });
-       // stop button kinda has no reason to exist but its kinda neat i'll let it live -S
+    // stop button kinda has no reason to exist but its kinda neat i'll let it live -S
     let stopButton = document.getElementById("stop");
     stopButton.addEventListener("click", () => {
         currentSong.stop();
@@ -111,7 +111,23 @@ class UserPlaylist extends Playlist {
     }
     addSong(song) {
         this.songs.push(song);
-        addToTrackList(this);
+        document.getElementById(this.title + "ListTracks").remove();
+        let DOM_listTracks = document.createElement("ul");
+        DOM_listTracks.classList.add("listTracks");
+        DOM_listTracks.id = this.title + "ListTracks";
+        for (let i = 0; i < this.songs.length; i++) {
+            let track = document.createElement("li");
+            track.classList.add("track");
+            track.textContent = this.songs[i].title;
+            track.id = this.title + i;
+            track.addEventListener("click", () => {
+                currentSong = this.songs[i];
+                changeMetadata();
+            });
+
+            DOM_listTracks.appendChild(track);
+        }
+        document.getElementById(this.title).appendChild(DOM_listTracks);
     }
 }
 
@@ -172,6 +188,7 @@ function addToTrackList(list) {
     let listCategory = document.createElement("div");
     if (list.listID == "userList") {
         listCategory.classList.add("userListCategory");
+        listCategory.id = list.title;
     }
     listCategory.classList.add("listCategory");
 
@@ -181,11 +198,11 @@ function addToTrackList(list) {
     openListButton.classList.add("openListButton");
     openListButton.textContent = list.title;
     openListButton.addEventListener("click", () => {
-        if (document.getElementById(list.title).classList.contains("listTracks")) {
-            document.getElementById(list.title).classList.replace("listTracks", "listTracksOpen");
+        if (document.getElementById(list.title + "ListTracks").classList.contains("listTracks")) {
+            document.getElementById(list.title + "ListTracks").classList.replace("listTracks", "listTracksOpen");
         }
         else {
-            document.getElementById(list.title).classList.replace("listTracksOpen", "listTracks");
+            document.getElementById(list.title + "ListTracks").classList.replace("listTracksOpen", "listTracks");
         }
     });
     if (list.listID == "userList") {
@@ -201,7 +218,7 @@ function addToTrackList(list) {
     // DOMfoolery pt3: adding every song from songsList to the track
     let DOM_listTracks = document.createElement("ul");
     DOM_listTracks.classList.add("listTracks");
-    DOM_listTracks.id = list.title;
+    DOM_listTracks.id = list.title + "ListTracks";
     for (let i = 0; i < list.songs.length; i++) {
         let track = document.createElement("li");
         track.classList.add("track");
