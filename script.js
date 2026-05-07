@@ -7,8 +7,19 @@ const dummyOpenButton = document.getElementById("listIdOpenButton");
 const theActualMusicPlayingElement = document.getElementById("theActualMusicPlayingElement");
 const addListButton = document.getElementById("addNewPlaylist");
 const volumeSlider = document.getElementById("volumeSlider");
+const savePlaylistsButton = document.getElementById("savePlaylists");
 let currentSong;
 let userPlaylists = [];
+
+
+const request = indexedDB.open("PlaylistStorage", 1);
+request.onupgradeneeded = (event) => {
+    const db = event.target.result;
+    db.createObjectStore("playlists", {keypath: "listID"});
+}
+request.onsuccess = (event) => {
+    const db = event.target.result;
+}
 
 class Game {
     constructor(gameID, songs, gameTitle) {
@@ -60,9 +71,6 @@ class Song {
     }
 }
 
-let sf = new Game("sf", [], "Sonic Frontiers");
-
-
 class Playlist {
     constructor(title, listID, game) {
         this.title = title;
@@ -73,6 +81,39 @@ class Playlist {
         addToTrackList(this)
     }
 }
+
+class UserPlaylist extends Playlist {
+    constructor(title, listID) {
+        super(title, listID, []);
+        this.songs = [];
+    }
+    addSong(song) {
+        this.songs.push(song);
+        document.getElementById(this.title + "ListTracks").remove();
+        let DOM_listTracks = document.createElement("ul");
+        DOM_listTracks.classList.add("listTracks");
+        DOM_listTracks.id = this.title + "ListTracks";
+        for (let i = 0; i < this.songs.length; i++) {
+            let track = document.createElement("li");
+            track.classList.add("track");
+            track.textContent = this.songs[i].title;
+            track.id = this.title + i;
+            track.addEventListener("click", () => {
+                currentSong = this.songs[i];
+                changeMetadata();
+            });
+
+            DOM_listTracks.appendChild(track);
+        }
+        document.getElementById(this.title).appendChild(DOM_listTracks);
+    }
+    toJSON() {
+        console.log({title: this.title, listID: this.listID, songs: this.songs});
+    }
+}
+
+
+let sf = new Game("sf", [], "Sonic Frontiers");
 
 function changeMetadata() {
     // step 1: changing the song title and game title
@@ -102,35 +143,6 @@ function changeMetadata() {
     })
 }
 
-
-
-class UserPlaylist extends Playlist {
-    constructor(title, listID) {
-        super(title, listID, []);
-        this.songs = [];
-    }
-    addSong(song) {
-        this.songs.push(song);
-        document.getElementById(this.title + "ListTracks").remove();
-        let DOM_listTracks = document.createElement("ul");
-        DOM_listTracks.classList.add("listTracks");
-        DOM_listTracks.id = this.title + "ListTracks";
-        for (let i = 0; i < this.songs.length; i++) {
-            let track = document.createElement("li");
-            track.classList.add("track");
-            track.textContent = this.songs[i].title;
-            track.id = this.title + i;
-            track.addEventListener("click", () => {
-                currentSong = this.songs[i];
-                changeMetadata();
-            });
-
-            DOM_listTracks.appendChild(track);
-        }
-        document.getElementById(this.title).appendChild(DOM_listTracks);
-    }
-}
-
 function addSongToUserPlaylist(playlistObject) {
     let userSongRequest = window.prompt("Type in the exact title of the song you wish to add.");
     if (userSongRequest === null) {
@@ -153,7 +165,6 @@ function addSongToUserPlaylist(playlistObject) {
     }
 }
 
-
 addListButton.addEventListener("click", () => {
     let newListName = window.prompt("What is the name of your custom playlist?");
     if (newListName === null) {
@@ -172,6 +183,23 @@ addListButton.addEventListener("click", () => {
 
 volumeSlider.addEventListener("input", (event) => {
     theActualMusicPlayingElement.volume = event.target.value / 100;
+});
+
+savePlaylistsButton.addEventListener("click", () => {
+    if (!db) return; // ends it all if the db doesn't yet exist
+
+    // creates transaction and objectStore
+    const transaction = db.transaction(["playlists"], "readwrite");
+    const store = transaction.objectStore("playlists");
+
+    // for every item in the playlist, put the JSONified version in the storage
+    userPlaylists.forEach((playlist) => {
+        store.add(playlist.toJSON);
+    })
+
+    transaction.oncomplete = () => {
+        console.log("Lists added successfully");
+    }
 })
 
 function addToTrackList(list) {

@@ -153,3 +153,14 @@ body {
     font-weight: bolder;
     margin-left: 10px;
 }
+
+#savePlaylists {
+    border: none;
+    border-radius: 55px;
+    padding: 5px 15px 5px 15px;
+    background-color: red;
+    color: white;
+    float: left;
+    cursor: pointer;
+    margin-bottom: 15px;
+}
