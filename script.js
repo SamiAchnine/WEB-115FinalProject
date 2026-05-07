@@ -8,6 +8,7 @@ const theActualMusicPlayingElement = document.getElementById("theActualMusicPlay
 const addListButton = document.getElementById("addNewPlaylist");
 const volumeSlider = document.getElementById("volumeSlider");
 let currentSong;
+let userPlaylists = [];
 
 class Game {
     constructor(gameID, songs, gameTitle) {
@@ -69,7 +70,7 @@ class Playlist {
         this.songs = game.songs;
     }
     addSongsFromGameId(game) {
-        addToTrackList(this.title, this.songs, this.listID)
+        addToTrackList(this)
     }
 }
 
@@ -110,24 +111,25 @@ class UserPlaylist extends Playlist {
     }
     addSong(song) {
         this.songs.push(song);
-        addToTrackList(this.title, this.songs, this.listID);
+        addToTrackList(this);
     }
 }
 
-function addSongToUserPlaylist() {
+function addSongToUserPlaylist(playlistObject) {
     let userSongRequest = window.prompt("Type in the exact title of the song you wish to add.");
     if (userSongRequest === null) {
-        console.log("twitter cancelled (song)")
+        console.log("twitter cancelled (song)");
     }
     else {
         // get the title of every song in sf, and iterate through it
         for (let i = 0; i < sf.songs.length; i++) {
-            if (sf.songs[i].title !== userSongRequest) {
+            if (sf.songs[i].title.toLowerCase().trim() !== userSongRequest) {
                 console.log(`${sf.songs[i].title} was not a match`)
             }
             else {
                 console.log(`We have a winner! - ${sf.songs[i].title}`);
                 let songWinner = sf.songs[i];
+                playlistObject.addSong(songWinner);
                 break;
             }
         }
@@ -143,7 +145,8 @@ addListButton.addEventListener("click", () => {
     }
     else {
         let userList = new UserPlaylist(newListName ? newListName : "New User-made Playlist", "userList");
-        addToTrackList(userList.title, userList.songs, userList.listID);
+        userPlaylists.push(userList);
+        addToTrackList(userList);
     }
     // TODO: 
     // add the ability to add songs to the list, 
@@ -155,76 +158,80 @@ volumeSlider.addEventListener("input", (event) => {
     theActualMusicPlayingElement.volume = event.target.value / 100;
 })
 
-function addToTrackList(title, songs, listID) {
+function addToTrackList(list) {
     // DOMfoolery part 0, clearing dummy data if it exists
-        try {
-            const dummyListCategory = document.getElementById("dummyListCategory");
-            dummyListCategory.remove();
-        }
-        catch (error) {
-            console.log("Dummy data didn't exist")
-        }
+    try {
+        const dummyListCategory = document.getElementById("dummyListCategory");
+        dummyListCategory.remove();
+    }
+    catch (error) {
+        console.log("Dummy data didn't exist")
+    }
 
-        // DOMfoolery pt1: creating the actual list
-        let listCategory = document.createElement("div");
-        if (listID == "userList") {
-            listCategory.classList.add("userListCategory");
-            let addSongButton = document.createElement("button");
-            addSongButton.classList.add("addSong");
-            addSongButton.textContent = "+"
-            listCategory.appendChild(addSongButton);
-            addSongButton.addEventListener("click", () => {addSongToUserPlaylist();});
-        }
-        listCategory.classList.add("listCategory");
+    // DOMfoolery pt1: creating the actual list
+    let listCategory = document.createElement("div");
+    if (list.listID == "userList") {
+        listCategory.classList.add("userListCategory");
+    }
+    listCategory.classList.add("listCategory");
 
-        // DOMfoolery pt2: making the button + event listener to open the list
-        let openListButton = document.createElement("button");
-        openListButton.id = listID + "OpenButton";
-        openListButton.classList.add("openListButton");
-        openListButton.textContent = title;
-        openListButton.addEventListener("click", () => {
-            if (document.getElementById(title).classList.contains("listTracks")) {
-                document.getElementById(title).classList.replace("listTracks", "listTracksOpen");
-            }
-            else {
-                document.getElementById(title).classList.replace("listTracksOpen", "listTracks");
-            }
+    // DOMfoolery pt2: making the button + event listener to open the list
+    let openListButton = document.createElement("button");
+    openListButton.id = list.listID + "OpenButton";
+    openListButton.classList.add("openListButton");
+    openListButton.textContent = list.title;
+    openListButton.addEventListener("click", () => {
+        if (document.getElementById(list.title).classList.contains("listTracks")) {
+            document.getElementById(list.title).classList.replace("listTracks", "listTracksOpen");
+        }
+        else {
+            document.getElementById(list.title).classList.replace("listTracksOpen", "listTracks");
+        }
+    });
+    if (list.listID == "userList") {
+        let addSongButton = document.createElement("button");
+        addSongButton.classList.add("addSong");
+        addSongButton.textContent = "+"
+        openListButton.appendChild(addSongButton);
+        addSongButton.addEventListener("click", () => {
+            addSongToUserPlaylist(list);
+        });
+    }
+
+    // DOMfoolery pt3: adding every song from songsList to the track
+    let DOM_listTracks = document.createElement("ul");
+    DOM_listTracks.classList.add("listTracks");
+    DOM_listTracks.id = list.title;
+    for (let i = 0; i < list.songs.length; i++) {
+        let track = document.createElement("li");
+        track.classList.add("track");
+        track.textContent = list.songs[i].title;
+        track.id = list.title + i;
+        // DOMfoolery pt3.5: adding the event listener to each song to switch out the metadata (will call separate function)
+        track.addEventListener("click", () => {
+            currentSong = list.songs[i];
+            changeMetadata();
         });
 
-        // DOMfoolery pt3: adding every song from songsList to the track
-        let DOM_listTracks = document.createElement("ul");
-        DOM_listTracks.classList.add("listTracks");
-        DOM_listTracks.id = title;
-        for (let i = 0; i < songs.length; i++) {
-            let track = document.createElement("li");
-            track.classList.add("track");
-            track.textContent = songs[i].title;
-            track.id = title + i;
-            // DOMfoolery pt3.5: adding the event listener to each song to switch out the metadata (will call separate function)
-            track.addEventListener("click", () => {
-                currentSong = songs[i];
-                changeMetadata();
-            });
-
-            DOM_listTracks.appendChild(track);
-        }
-        
-        //DOMfoolery pt4: adding it all to the DOM (the part where it all goes to shit)
-        /* 
-        <div trackList>
-            <div listCategory>
-                <button> </>
-                <listTracks>
-                    <li track> track 1 </>
-                    <li track> track 2> </>
-                    and so on...
-                </>
+        DOM_listTracks.appendChild(track);
+    }
+    
+    //DOMfoolery pt4: adding it all to the DOM (the part where it all goes to shit)
+    /* 
+    <div trackList>
+        <div listCategory>
+            <button> </>
+            <listTracks>
+                <li track> track 1 </>
+                <li track> track 2> </>
+                and so on...
             </>
         </>
-        */
-       trackList.appendChild(listCategory);
-       listCategory.appendChild(openListButton);
-       listCategory.appendChild(DOM_listTracks);
+    </>
+    */
+    trackList.appendChild(listCategory);
+    listCategory.appendChild(openListButton);
+    listCategory.appendChild(DOM_listTracks);
 
 }
 

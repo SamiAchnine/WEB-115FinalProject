@@ -150,7 +150,6 @@ body {
 .addSong {
     border: none;
     border-radius: 50%;
-    padding: 5px 6px 5px 6px;
     font-weight: bolder;
-    margin-bottom: 8px;
+    margin-left: 10px;
 }
