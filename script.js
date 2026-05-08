@@ -167,7 +167,7 @@ function addSongToUserPlaylist(playlistObject) {
     }
 }
 
-/* addListButton.addEventListener("click", () => {
+addListButton.addEventListener("click", () => {
     let newListName = window.prompt("What is the name of your custom playlist?");
     if (newListName === null) {
         console.log("twitter cancelled");
@@ -180,8 +180,8 @@ function addSongToUserPlaylist(playlistObject) {
     // TODO: 
     // add the ability to add songs to the list, 
     // save the userLists to localStorage
+    });
     
-}); */
 
 volumeSlider.addEventListener("input", (event) => {
     theActualMusicPlayingElement.volume = event.target.value / 100;
