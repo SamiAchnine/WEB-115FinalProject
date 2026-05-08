@@ -16,7 +16,7 @@ let db;
 const request = indexedDB.open("PlaylistStorage", 1);
 request.onupgradeneeded = (event) => {
     db = event.target.result;
-    db.createObjectStore("playlists", {keypath: "listID"});
+    db.createObjectStore("playlists", {autoIncrement: true});
 }
 request.onsuccess = (event) => {
     db = event.target.result;
