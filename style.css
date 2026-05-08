@@ -164,3 +164,15 @@ body {
     cursor: pointer;
     margin-bottom: 15px;
 }
+
+#loadPlaylists {
+    border: none;
+    border-radius: 55px;
+    padding: 5px 15px 5px 15px;
+    margin-left: 5px;
+    background-color: blue;
+    color: white;
+    float: left;
+    cursor: pointer;
+    margin-bottom: 15px;
+}

@@ -7,7 +7,8 @@ const dummyOpenButton = document.getElementById("listIdOpenButton");
 const theActualMusicPlayingElement = document.getElementById("theActualMusicPlayingElement");
 const addListButton = document.getElementById("addNewPlaylist");
 const volumeSlider = document.getElementById("volumeSlider");
-const savePlaylistsButton = document.getElementById("savePlaylists");
+// const savePlaylistsButton = document.getElementById("savePlaylists");
+// const loadPlaylistsButton = document.getElementById("loadPlaylists");
 let currentSong;
 let userPlaylists = [];
 let db;
@@ -166,7 +167,7 @@ function addSongToUserPlaylist(playlistObject) {
     }
 }
 
-addListButton.addEventListener("click", () => {
+/* addListButton.addEventListener("click", () => {
     let newListName = window.prompt("What is the name of your custom playlist?");
     if (newListName === null) {
         console.log("twitter cancelled");
@@ -180,13 +181,13 @@ addListButton.addEventListener("click", () => {
     // add the ability to add songs to the list, 
     // save the userLists to localStorage
     
-});
+}); */
 
 volumeSlider.addEventListener("input", (event) => {
     theActualMusicPlayingElement.volume = event.target.value / 100;
 });
 
-savePlaylistsButton.addEventListener("click", () => {
+/* savePlaylistsButton.addEventListener("click", () => {
     if (!db) return; // ends it all if the db doesn't yet exist
 
     // creates transaction and objectStore
@@ -195,13 +196,35 @@ savePlaylistsButton.addEventListener("click", () => {
 
     // for every item in the playlist, put the JSONified version in the storage
     userPlaylists.forEach((playlist) => {
-        store.add(playlist.toJSON());
+        store.add(playlist.toJSON(), playlist.listID);
     })
 
     transaction.oncomplete = () => {
         console.log("Lists added successfully");
     }
-})
+}); */
+
+/* loadPlaylistsButton.addEventListener("click", () => {
+    if (!db) return; // ends it all if db doesnt exist
+
+    // creates transaction and objectStore again
+    const transaction = db.transaction(["playlists"], "readonly");
+    const store = transaction.objectStore("playlists");
+
+    // for every item in the storage, put the JSONified version in a variable
+    const getReq = store.getAll();
+    getReq.onerror = (event) => {
+        console.error("could not retrieve data");
+    };
+    getReq.onsuccess = (event) => {
+        let cursor = event.target.result;
+        if (cursor) {
+            let key = cursor.primaryKey;
+            let value = cursor.value;
+            console.log(key, value);
+        }
+    };
+}) */
 
 function addToTrackList(list) {
     // DOMfoolery part 0, clearing dummy data if it exists
