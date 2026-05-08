@@ -10,15 +10,16 @@ const volumeSlider = document.getElementById("volumeSlider");
 const savePlaylistsButton = document.getElementById("savePlaylists");
 let currentSong;
 let userPlaylists = [];
+let db;
 
 
 const request = indexedDB.open("PlaylistStorage", 1);
 request.onupgradeneeded = (event) => {
-    const db = event.target.result;
+    db = event.target.result;
     db.createObjectStore("playlists", {keypath: "listID"});
 }
 request.onsuccess = (event) => {
-    const db = event.target.result;
+    db = event.target.result;
 }
 
 class Game {
@@ -194,7 +195,7 @@ savePlaylistsButton.addEventListener("click", () => {
 
     // for every item in the playlist, put the JSONified version in the storage
     userPlaylists.forEach((playlist) => {
-        store.add(playlist.toJSON);
+        store.add(playlist.toJSON());
     })
 
     transaction.oncomplete = () => {
